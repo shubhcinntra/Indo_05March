@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "375022333292",
+    "project_id": "indo-hitech",
+    "storage_bucket": "indo-hitech.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375022333292:android:57331a15bc7aae488d1749",
+        "android_client_info": {
+          "package_name": "com.cinntra.indo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYYTsJNwxfo3tcNgDJkq32jpCJAQHMFb4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
