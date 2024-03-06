@@ -169,7 +169,9 @@ public class Globals {
     public static String PDFURL     = "http://103.234.187.197:4255/assets/html/"; //dev*/
 
     public static String NewBaseUrl = "http://103.107.67.48:8015/";  //Dev
-    public static String PDFURL = "http://103.234.187.197:4215/assets/html/"; //dev
+    public static String PDFURL = "http://103.107.67.48:4215/assets/html/"; //dev
+
+
 
 
     public static String pdfGlobalUrl = "http://103.234.187.197:4214/";

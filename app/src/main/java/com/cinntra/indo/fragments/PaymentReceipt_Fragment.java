@@ -508,6 +508,8 @@ public class PaymentReceipt_Fragment extends Fragment implements Toolbar.OnMenuI
 
 
     private void setRecyclerViewAdapter() {
+        //todo delete
+        db.myDataDao().deleteAll();
 
         try {
             if (db.myDataDao().getAll().size() > 0) {

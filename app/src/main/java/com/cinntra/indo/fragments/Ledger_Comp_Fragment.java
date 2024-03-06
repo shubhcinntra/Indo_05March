@@ -211,6 +211,10 @@ public class Ledger_Comp_Fragment extends Fragment implements Toolbar.OnMenuItem
     private void setSaleAdapter() {
         callDashboardCounter();
         AllitemsList = db.myDataDao().getAll();
+        //todo Allitemlist clear to update list
+        AllitemsList.clear();
+
+
         if (AllitemsList == null)
             AllitemsList = new ArrayList<>();
         else if (AllitemsList.size() > 0)
