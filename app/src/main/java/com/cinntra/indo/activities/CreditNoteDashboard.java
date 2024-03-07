@@ -69,9 +69,9 @@ import retrofit2.Response;
 public class CreditNoteDashboard extends AppCompatActivity {
     ActivityCreditNoteDashboardBinding binding;
     int pageNo = 1;
-    String type="";
-    String groupType="";
-    String code="";
+    String type = "";
+    String groupType = "";
+    String code = "";
     CreditCostomersAdapter adapter;
     ArrayList<BusinessPartnerData> AllItemList = new ArrayList<>();
     LinearLayoutManager layoutManager;
@@ -89,21 +89,12 @@ public class CreditNoteDashboard extends AppCompatActivity {
     private void openpopup() {
 
 
-        PowerMenu powerMenu = new PowerMenu.Builder(this)
-                .addItem(new PowerMenuItem("Invoice Credit note", R.drawable.ic_ledger, false)) // aad an item list.
+        PowerMenu powerMenu = new PowerMenu.Builder(this).addItem(new PowerMenuItem("Invoice Credit note", R.drawable.ic_ledger, false)) // aad an item list.
                 .addItem(new PowerMenuItem("Purchased Credit Note", R.drawable.ic_ledger, false)) // aad an item list.
                 .setAnimation(MenuAnimation.SHOWUP_TOP_RIGHT) // Animation start point (TOP | LEFT).
                 .setMenuRadius(10f) // sets the corner radius.
                 .setMenuShadow(10f) // sets the shadow.
-                .setTextColor(ContextCompat.getColor(this, R.color.black))
-                .setTextGravity(Gravity.START)
-                .setTextSize(12)
-                .setTextTypeface(Typeface.createFromAsset(getAssets(), "poppins_regular.ttf"))
-                .setSelectedTextColor(Color.BLACK)
-                .setWidth(Globals.pxFromDp(this, 220f))
-                .setMenuColor(Color.WHITE)
-                .setSelectedMenuColor(ContextCompat.getColor(this, R.color.colorPrimary))
-                .build();
+                .setTextColor(ContextCompat.getColor(this, R.color.black)).setTextGravity(Gravity.START).setTextSize(12).setTextTypeface(Typeface.createFromAsset(getAssets(), "poppins_regular.ttf")).setSelectedTextColor(Color.BLACK).setWidth(Globals.pxFromDp(this, 220f)).setMenuColor(Color.WHITE).setSelectedMenuColor(ContextCompat.getColor(this, R.color.colorPrimary)).build();
         powerMenu.showAsDropDown(binding.toolbarCreditNoteDashBoard.filterView);
 
 
@@ -137,9 +128,9 @@ public class CreditNoteDashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityCreditNoteDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        type=getIntent().getStringExtra("Type");
-        groupType=getIntent().getStringExtra("filter");
-        code=getIntent().getStringExtra("code");
+        type = getIntent().getStringExtra("Type");
+        groupType = getIntent().getStringExtra("filter");
+        code = getIntent().getStringExtra("code");
 
         setUpToolbar();
         url = Globals.allCustomerPdfUrl + Prefs.getString(Globals.SalesEmployeeCode, "") + "&" + PAGE_NO_STRING + "" + pageNo + Globals.QUERY_MAX_PAGE_PDF + Globals.QUERY_PAGE_SIZE + "&SearchText=";
@@ -263,15 +254,13 @@ public class CreditNoteDashboard extends AppCompatActivity {
 
     private void showDateBottomSheetDialog(Context context) {
         BottomSheetDialogSelectDateBinding bindingBottom;
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context,R.style.BottomSheetDialogTheme);
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialogTheme);
         bindingBottom = BottomSheetDialogSelectDateBinding.inflate(getLayoutInflater());
         bottomSheetDialog.setContentView(bindingBottom.getRoot());
-        bindingBottom.ivCloseBottomSheet.setOnClickListener(view ->
-        {
+        bindingBottom.ivCloseBottomSheet.setOnClickListener(view -> {
             bottomSheetDialog.dismiss();
         });
-        bindingBottom.tvCustomDateBottomSheetSelectDate.setOnClickListener(view ->
-        {
+        bindingBottom.tvCustomDateBottomSheetSelectDate.setOnClickListener(view -> {
             // Toast.makeText(context, "today", Toast.LENGTH_SHORT).show();
             bottomSheetDialog.dismiss();
             dateRangeSelector();
@@ -483,7 +472,14 @@ public class CreditNoteDashboard extends AppCompatActivity {
         binding.toolbarCreditNoteDashBoard.sharePdf.setVisibility(View.VISIBLE);
         binding.toolbarCreditNoteDashBoard.ivSharePdf.setVisibility(View.VISIBLE);
         binding.toolbarCreditNoteDashBoard.newQuatos.setVisibility(View.GONE);
-        binding.toolbarCreditNoteDashBoard.headTitle.setText(getResources().getString(R.string.credit_notes));
+
+        //todo toolbar
+        if (Prefs.getString(Globals.forSalePurchase, Globals.Sale).equalsIgnoreCase(Globals.Purchase)) {
+            binding.toolbarCreditNoteDashBoard.headTitle.setText(getResources().getString(R.string.debit_note));
+        } else {
+            binding.toolbarCreditNoteDashBoard.headTitle.setText(getResources().getString(R.string.credit_notes));
+        }
+
     }
 
 
@@ -506,9 +502,7 @@ public class CreditNoteDashboard extends AppCompatActivity {
             boolean isAtLastItem = firstVisibleitempositon + visibleItemCount >= totalItemCount;
             boolean isNotAtBeginning = firstVisibleitempositon >= 0;
             boolean isTotaolMoreThanVisible = totalItemCount >= Globals.QUERY_PAGE_SIZE;
-            boolean shouldPaginate =
-                    isNotLoadingAndNotLastPage && isNotAtBeginning && isAtLastItem && isTotaolMoreThanVisible
-                            && isScrollingpage;
+            boolean shouldPaginate = isNotLoadingAndNotLastPage && isNotAtBeginning && isAtLastItem && isTotaolMoreThanVisible && isScrollingpage;
 
             if (isScrollingpage && (visibleItemCount + firstVisibleitempositon == totalItemCount)) {
                 binding.loader.loader.setVisibility(View.VISIBLE);
@@ -548,7 +542,14 @@ public class CreditNoteDashboard extends AppCompatActivity {
         Prefs.putString(Globals.FROM_DATE, fromDate);
         Prefs.putString(Globals.TO_DATE, toDate);
 
-        Call<CustomerBusinessRes> call = NewApiClient.getInstance().getApiService().credit_note_dashboard(hde);
+        Call<CustomerBusinessRes> call;
+
+        if (Prefs.getString(Globals.forSalePurchase, Globals.Sale).equalsIgnoreCase(Globals.Purchase)) {
+            call = NewApiClient.getInstance().getApiService().credit_note_dashboard_purchase(hde);
+        } else {
+            call = NewApiClient.getInstance().getApiService().credit_note_dashboard(hde);
+        }
+
         call.enqueue(new Callback<CustomerBusinessRes>() {
             @Override
             public void onResponse(Call<CustomerBusinessRes> call, Response<CustomerBusinessRes> response) {
@@ -600,7 +601,17 @@ public class CreditNoteDashboard extends AppCompatActivity {
         hde.put("Filter", groupType);
         hde.put("MaxSize", String.valueOf(Globals.QUERY_PAGE_SIZE));
         hde.put("SalesPersonCode", Prefs.getString(Globals.SalesEmployeeCode, ""));
-        Call<CustomerBusinessRes> call = NewApiClient.getInstance().getApiService().credit_note_dashboard(hde);
+
+        Call<CustomerBusinessRes> call;
+
+        if (Prefs.getString(Globals.forSalePurchase, Globals.Sale).equalsIgnoreCase(Globals.Purchase)) {
+            call = NewApiClient.getInstance().getApiService().credit_note_dashboard_purchase(hde);
+        } else {
+            call = NewApiClient.getInstance().getApiService().credit_note_dashboard(hde);
+        }
+
+
+        //   Call<CustomerBusinessRes> call = NewApiClient.getInstance().getApiService().credit_note_dashboard(hde);
         call.enqueue(new Callback<CustomerBusinessRes>() {
             @Override
             public void onResponse(Call<CustomerBusinessRes> call, Response<CustomerBusinessRes> response) {
@@ -626,14 +637,23 @@ public class CreditNoteDashboard extends AppCompatActivity {
 
     /*************** Bhupi *********************/ // Calling one BottomSheet for Ledger Sharing
     private void shareLedgerData() {
-        String title = getString(R.string.credit_notes);
+        String title = "";
+
+        if (Prefs.getString(Globals.forSalePurchase, Globals.Sale).equalsIgnoreCase(Globals.Purchase)) {
+
+            title = getString(R.string.debit_note);
+            url = Globals.allDebitNote + "FromDate=" + startDate + "&ToDate=" + endDate + "&" + PAGE_NO_STRING + "" + pageNo + Globals.QUERY_MAX_PAGE_PDF + Globals.QUERY_PAGE_SIZE;
+
+        } else {
+            title = getString(R.string.credit_notes);
+            url = Globals.allCreditNote + "FromDate=" + startDate + "&ToDate=" + endDate + "&" + PAGE_NO_STRING + "" + pageNo + Globals.QUERY_MAX_PAGE_PDF + Globals.QUERY_PAGE_SIZE;
+
+        }
 
         // url = Globals.particularBpSales + "Type="+reportType+"&CardCode=" + cardCode + "&FromDate="+startDate+"&ToDate="+endDate+"&"+PAGE_NO_STRING+""+pageNo+Globals.QUERY_MAX_PAGE_PDF+Globals.QUERY_PAGE_SIZE;
-        url = Globals.allCreditNote + "FromDate=" + startDate + "&ToDate=" + endDate + "&" + PAGE_NO_STRING + "" + pageNo + Globals.QUERY_MAX_PAGE_PDF + Globals.QUERY_PAGE_SIZE;
-        WebViewBottomSheetFragment addPhotoBottomDialogFragment =
-                WebViewBottomSheetFragment.newInstance(dialogWeb, url, title);
-        addPhotoBottomDialogFragment.show(getSupportFragmentManager(),
-                "");
+        //    url = Globals.allCreditNote + "FromDate=" + startDate + "&ToDate=" + endDate + "&" + PAGE_NO_STRING + "" + pageNo + Globals.QUERY_MAX_PAGE_PDF + Globals.QUERY_PAGE_SIZE;
+        WebViewBottomSheetFragment addPhotoBottomDialogFragment = WebViewBottomSheetFragment.newInstance(dialogWeb, url, title);
+        addPhotoBottomDialogFragment.show(getSupportFragmentManager(), "");
     }
 
     /***shubh****/
@@ -666,25 +686,21 @@ public class CreditNoteDashboard extends AppCompatActivity {
         });
 
 
-        bindingBottom.linearWhatsappShare.setOnClickListener(view ->
-        {
+        bindingBottom.linearWhatsappShare.setOnClickListener(view -> {
             String f_name = String.format("%s.pdf", new SimpleDateFormat("dd_MM_yyyyHH_mm_ss", Locale.US).format(new Date()));
             lab_pdf(dialogWeb, f_name);
         });
 
-        bindingBottom.linearOtherShare.setOnClickListener(view ->
-                {
-                    String f_name = String.format("%s.pdf", new SimpleDateFormat("dd_MM_yyyyHH_mm_ss", Locale.US).format(new Date()));
-                    lab_other_pdf(dialogWeb, f_name);
+        bindingBottom.linearOtherShare.setOnClickListener(view -> {
+            String f_name = String.format("%s.pdf", new SimpleDateFormat("dd_MM_yyyyHH_mm_ss", Locale.US).format(new Date()));
+            lab_other_pdf(dialogWeb, f_name);
 
-                }
-        );
+        });
         bindingBottom.linearGmailShare.setOnClickListener(view -> {
 
-                    String f_name = String.format("%s.pdf", new SimpleDateFormat("dd_MM_yyyyHH_mm_ss", Locale.US).format(new Date()));
-                    lab_gmail_pdf(dialogWeb, f_name);
-                }
-        );
+            String f_name = String.format("%s.pdf", new SimpleDateFormat("dd_MM_yyyyHH_mm_ss", Locale.US).format(new Date()));
+            lab_gmail_pdf(dialogWeb, f_name);
+        });
 
     }
 
@@ -720,10 +736,7 @@ public class CreditNoteDashboard extends AppCompatActivity {
 
         String stringFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/hana/" + "/" + fName;
         File file = new File(stringFile);
-        Uri apkURI = FileProvider.getUriForFile(
-                this,
-                getApplicationContext()
-                        .getPackageName() + ".FileProvider", file);
+        Uri apkURI = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".FileProvider", file);
 
 
         if (!file.exists()) {
@@ -777,10 +790,7 @@ public class CreditNoteDashboard extends AppCompatActivity {
     private void whatsappShare(String fName) {
         String stringFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/hana/" + "/" + fName;
         File file = new File(stringFile);
-        Uri apkURI = FileProvider.getUriForFile(
-                this,
-                getApplicationContext()
-                        .getPackageName() + ".FileProvider", file);
+        Uri apkURI = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".FileProvider", file);
 
 
         if (!file.exists()) {
@@ -794,10 +804,8 @@ public class CreditNoteDashboard extends AppCompatActivity {
             share.setAction(Intent.ACTION_SEND);
             share.setType("application/pdf");
             share.putExtra(Intent.EXTRA_STREAM, apkURI);
-            if (isAppInstalled("com.whatsapp"))
-                share.setPackage("com.whatsapp");
-            else if (isAppInstalled("com.whatsapp.w4b"))
-                share.setPackage("com.whatsapp.w4b");
+            if (isAppInstalled("com.whatsapp")) share.setPackage("com.whatsapp");
+            else if (isAppInstalled("com.whatsapp.w4b")) share.setPackage("com.whatsapp.w4b");
 
             startActivity(share);
         } catch (ActivityNotFoundException e) {
@@ -811,10 +819,7 @@ public class CreditNoteDashboard extends AppCompatActivity {
 
         String stringFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/hana/" + "/" + fName;
         File file = new File(stringFile);
-        Uri apkURI = FileProvider.getUriForFile(
-                this,
-                getApplicationContext()
-                        .getPackageName() + ".FileProvider", file);
+        Uri apkURI = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".FileProvider", file);
 
 
         if (!file.exists()) {

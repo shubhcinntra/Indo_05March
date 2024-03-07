@@ -188,6 +188,9 @@ public class Globals {
     public static String journalVoucher = "" + PDFURL + "journalvoucher.html?id=";
     public static String allCustomerPdfUrl = "" + PDFURL + "PartList.html?SalesPersonCode=";
     public static String allCreditNote = "" + PDFURL + "Credit_Note.html?";
+
+    public static String allDebitNote = "" + PDFURL + "Debit_Note.html?";
+
     public static String perticularCreditNote = "" + PDFURL + "PerticularCredit.html?";
     public static String perticularPurchaseCreditNote = "" + PDFURL + "purchaseinvoices.html?";
     public static String receiptAllPdfUl = "" + PDFURL + "ReceiptReportSharing.html?Type=Gross&";

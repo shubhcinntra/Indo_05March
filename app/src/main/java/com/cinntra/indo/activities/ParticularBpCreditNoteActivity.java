@@ -370,7 +370,10 @@ public class ParticularBpCreditNoteActivity extends AppCompatActivity {
 
                 if (fromwhere.equalsIgnoreCase("return")){
                     call = NewApiClient.getInstance().getApiService().purchase_bp_credit_note(hde);
-                }else {
+                } else if (Prefs.getString(Globals.forSalePurchase,Globals.Sale).equalsIgnoreCase(Globals.Purchase)) {
+                    call = NewApiClient.getInstance().getApiService().purchase_bp_credit_note(hde);
+
+                } else {
                     call = NewApiClient.getInstance().getApiService().bp_credit_note(hde);
                 }
 
@@ -428,9 +431,15 @@ public class ParticularBpCreditNoteActivity extends AppCompatActivity {
                 hde.put("MaxSize", String.valueOf(Globals.QUERY_PAGE_SIZE));
                 if (fromwhere.equalsIgnoreCase("return")){
                     call = NewApiClient.getInstance().getApiService().purchase_bp_credit_note(hde);
-                }else {
+                }else if (Prefs.getString(Globals.forSalePurchase,Globals.Sale).equalsIgnoreCase(Globals.Purchase)) {
+                    call = NewApiClient.getInstance().getApiService().purchase_bp_credit_note(hde);
+
+                }
+
+                else {
                     call = NewApiClient.getInstance().getApiService().bp_credit_note(hde);
                 }
+
                 try {
                     Response<LedgerCustomerResponse> response = call.execute();
                     if (response.isSuccessful()) {
@@ -490,7 +499,12 @@ public class ParticularBpCreditNoteActivity extends AppCompatActivity {
             url = Globals.perticularPurchaseCreditNote+ "CardCode="+cardCode+ "&FromDate=" + startDate + "&ToDate=" + endDate + "&" + PAGE_NO_STRING + "" + pageNo + Globals.QUERY_MAX_PAGE_PDF + Globals.QUERY_PAGE_SIZE;
 
 
-        }else {
+        }else if (Prefs.getString(Globals.forSalePurchase,Globals.Sale).equalsIgnoreCase(Globals.Purchase)) {
+            url = Globals.perticularPurchaseCreditNote + "CardCode=" + cardCode + "&FromDate=" + startDate + "&ToDate=" + endDate + "&" + PAGE_NO_STRING + "" + pageNo + Globals.QUERY_MAX_PAGE_PDF + Globals.QUERY_PAGE_SIZE;
+
+        }
+
+        else {
             url = Globals.perticularCreditNote+ "CardCode="+cardCode+ "&FromDate=" + startDate + "&ToDate=" + endDate + "&" + PAGE_NO_STRING + "" + pageNo + Globals.QUERY_MAX_PAGE_PDF + Globals.QUERY_PAGE_SIZE;
             Log.e("PDF URL===>:", "onCreate: "+url);
 

@@ -193,7 +193,7 @@ public class InvoiceTransactionFullInfo extends MainBaseActivity {
         CustomersItemsAdapter adapter = new CustomersItemsAdapter(this, invoiceNewData.getDocumentLines());
         item_recyclerview.setAdapter(adapter);
 
-        if (Prefs.getString(Globals.Sale_Purchse_Diff, "").equalsIgnoreCase("ttAPInvoice")) {
+        if (Prefs.getString(Globals.Sale_Purchse_Diff, "").equalsIgnoreCase("ttAPInvoice")||Prefs.getString(Globals.forSalePurchase, Globals.Sale).equalsIgnoreCase(Globals.Purchase)) {
             url = Globals.apInvoiceUrl + "id=" + id;
             headingDateMemo.setText("Invoice Date");
             btnShareInVoice.setText("Share Invoice");

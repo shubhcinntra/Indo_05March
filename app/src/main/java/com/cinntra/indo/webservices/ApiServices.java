@@ -955,6 +955,11 @@ public interface ApiServices {
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     Call<CustomerBusinessRes> credit_note_dashboard(@Body HashMap<String, String> pay);
 
+
+    @POST("purchaseinvoices/ap_credit_note_dashboard")
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    Call<CustomerBusinessRes> credit_note_dashboard_purchase(@Body HashMap<String, String> pay);
+
     @POST(" invoice/bp_credit_note")
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     Call<LedgerCustomerResponse> bp_credit_note(@Body HashMap<String, String> logInDetail);
